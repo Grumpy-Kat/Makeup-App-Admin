@@ -1,2 +1,2 @@
 # Makeup-App
-This is a companion admin appf for GlamKit. GlamKit is an app that makes it easy to organize your makeup and create looks. Just add the palettes in your collection, scroll through all the shades you own, and create breathtaking looks. This app is used to edit and change the status of preset palettes in the GlamKit database.
+This is a companion admin app for GlamKit. GlamKit is an app that makes it easy to organize your makeup and create looks. Add the palettes in your collection, scroll through all the shades you own, and create breathtaking looks. This app is used to edit and approve preset palettes in the GlamKit database.
