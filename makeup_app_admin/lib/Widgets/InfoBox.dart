@@ -179,7 +179,6 @@ class InfoBoxState extends State<InfoBox> with TickerProviderStateMixin {
                           padding: EdgeInsets.all(0),
                           onPressed: () {
                             _shouldClose = true;
-                            print(widget.swatch);
                             navigation.push(
                               context,
                               Offset(1, 0),

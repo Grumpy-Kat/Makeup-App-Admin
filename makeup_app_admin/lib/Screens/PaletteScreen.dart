@@ -17,7 +17,6 @@ class PaletteScreen extends StatefulWidget {
 
   PaletteScreen({ String paletteId, String brand = '', String name = '' }) {
     isReloading = true;
-    print('isReloading');
     if(paletteId != null && paletteId != '') {
       //sets screen info
       PaletteScreen.paletteId = paletteId;
