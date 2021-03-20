@@ -209,11 +209,32 @@ Future<Map<String, Palette>> loadAllFormatted({ bool override = false, overrideI
         status: data.containsKey('status') ? PaletteStatus.values[data['status']] : PaletteStatus.Approved,
       );
       palettes[palette.id] = palette;
-      getStatusList(palette.status)[palette.id] = palette;
     }
     print('${palettes.length} palettes');
     hasSaveChanged = false;
     isLoading = false;
+    palettes = await sort();
+  }
+  return palettes;
+}
+
+Future<Map<String, Palette>> sort() async {
+  List<Palette> sortedPalettes = palettes.values.toList();
+  sortedPalettes.sort(
+    (Palette a, Palette b) {
+      int brand = a.brand.compareTo(b.brand);
+      if(brand == 0) {
+        return a.name.compareTo(b.name);
+      } else {
+        return brand;
+      }
+    }
+  );
+  palettes.clear();
+  for(int i = 0; i < sortedPalettes.length; i++) {
+    Palette palette = sortedPalettes[i];
+    palettes[palette.id] = palette;
+    getStatusList(palette.status)[palette.id] = palette;
   }
   return palettes;
 }
@@ -251,4 +272,59 @@ Future<Map<String, Palette>> loadStatusFormatted(PaletteStatus status, { bool ov
     await loadAllFormatted(override: override, overrideInner: overrideInner);
   }
   return getStatusList(status);
+}
+
+Future<List<Palette>> search(List<Palette> palettes, String search) async {
+  List<Palette> ret = palettes.toList();
+  if(search == '' || search == ' ') {
+    return ret;
+  }
+  List<String> searchTerms = search.trim().toLowerCase().replaceAll('‘', '\'').replaceAll('’', '\'').replaceAll('“', '\'').replaceAll('”', '\"').split(' ');
+  for(int i = palettes.length - 1; i >= 0; i--) {
+    Palette palette = ret[i];
+    String possibleTerms = '';
+
+    //add brand to possible search terms, must account for different types of quotes
+    String brand = palette.brand.toLowerCase().trimRight().replaceAll('‘', '\'').replaceAll('’', '\'').replaceAll('“', '\'').replaceAll('”', '\"');
+    possibleTerms += ' $brand';
+    possibleTerms += ' ${brand.replaceAll(RegExp(r'[^\w\s]'), '')}';
+
+    //add name to possible search terms, must account for different types of quotes
+    String name = palette.name.toLowerCase().trimRight().replaceAll('‘', '\'').replaceAll('’', '\'').replaceAll('“', '\'').replaceAll('”', '\"');
+    possibleTerms += ' $name';
+    possibleTerms += ' ${name.replaceAll(RegExp(r'[^\w\s]'), '')}';
+
+    //add brand acronym, either separated by spaces or by capital letters, to possible search terms
+    String spaceAcronym = '';
+    String capsAcronym = '';
+    List<String> brandWords = palette.brand.split(' ');
+    for(int j = 0; j < brandWords.length; j++) {
+      if(brandWords[j] == '') {
+        continue;
+      }
+      String letter = brandWords[j].substring(0, 1);
+      spaceAcronym += letter;
+      capsAcronym += letter;
+      for(int k = 1; k < brandWords[j].length; k++) {
+        letter = brandWords[j].substring(k, k + 1);
+        if(letter == letter.toUpperCase()) {
+          capsAcronym += letter;
+        }
+      }
+    }
+    possibleTerms += ' ${spaceAcronym.toLowerCase()}';
+    possibleTerms += ' ${capsAcronym.toLowerCase()}';
+
+    //check if search terms are found in possible search terms
+    for(int j = 0; j < searchTerms.length; j++) {
+      if(searchTerms[j] == '') {
+        continue;
+      }
+      if(!possibleTerms.contains(' ${searchTerms[j]}')) {
+        ret.removeAt(i);
+        break;
+      }
+    }
+  }
+  return ret;
 }

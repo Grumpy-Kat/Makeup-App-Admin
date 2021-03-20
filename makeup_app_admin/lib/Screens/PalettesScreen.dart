@@ -25,7 +25,12 @@ class PalettesScreen extends StatefulWidget {
 }
 
 class PalettesScreenState extends State<PalettesScreen> with ScreenState {
-  List<Palette> _palettes;
+  Future _addPalettesFuture;
+  static List<Palette> _allPalettes = [];
+  static List<Palette> _palettes = [];
+
+  bool _isSearching = false;
+  String _search = '';
 
   bool _isComparing = false;
   List<String> _idsSelected = [];
@@ -33,11 +38,20 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
   @override
   void initState() {
     super.initState();
+    _addPalettesFuture = _addPalettes();
   }
 
   Future<List<Palette>> _addPalettes() async {
-    Map<String, Palette> map = (await IO.loadStatusFormatted(PalettesScreen.status));
-    _palettes = map.values.toList() ?? [];
+    if(_allPalettes == null || _allPalettes.length == 0 || _allPalettes[0].status != PalettesScreen.status) {
+      Map<String, Palette> map = (await IO.loadStatusFormatted(PalettesScreen.status));
+      _allPalettes = map.values.toList() ?? [];
+      _palettes = _allPalettes;
+    }
+    if(_search != '') {
+      _palettes = await IO.search(_allPalettes, _search);
+    } else {
+      _palettes = _allPalettes;
+    }
     return _palettes;
   }
 
@@ -63,53 +77,149 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
           },
         ),
       ],
-      body: FutureBuilder(
-        future: _addPalettes(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          List<Widget> children = [];
-          if(snapshot.connectionState == ConnectionState.done) {
-            _palettes = _palettes ?? [];
-            for(int i = 0; i < _palettes.length; i++) {
-              children.add(
-                globalWidgets.getListItem(
-                  '${_palettes[i].brand}',
-                  '${_palettes[i].name}',
-                  i == _palettes.length - 1,
-                  () {
-                    if(_isComparing) {
-                      if(_idsSelected.contains(_palettes[i].id)) {
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+            currentFocus.focusedChild.unfocus();
+          }
+          setState(() {
+            _isSearching = false;
+          });
+        },
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment(-1.0, 0.0),
+              child: Stack(
+                overflow: Overflow.visible,
+                children: [
+                  AnimatedContainer(
+                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    duration: Duration(milliseconds: 375),
+                    width: _isSearching ? MediaQuery.of(context).size.width - 103 : MediaQuery.of(context).size.width - 30,
+                    padding: EdgeInsets.symmetric(horizontal: 11, vertical: 10),
+                    curve: Curves.easeOut,
+                    alignment: Alignment(-1.0, 0.0),
+                    child: TextFormField(
+                      initialValue: _search,
+                      textInputAction: TextInputAction.search,
+                      onTap: () {
                         setState(() {
-                          _idsSelected.remove(_palettes[i].id);
+                          _isSearching = true;
                         });
-                      } else if(_idsSelected.length < 3) {
-                        //can compare up to 3
+                      },
+                      onChanged: (value) {
                         setState(() {
-                          _idsSelected.add(_palettes[i].id);
+                          _search = value;
+                          _addPalettesFuture = _addPalettes();
                         });
-                      }
-                    } else {
-                      navigation.push(
-                        context,
-                        Offset(1, 0),
-                        routes.ScreenRoutes.PaletteScreen,
-                        PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
+                      },
+                      style: theme.primaryTextPrimary,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        isCollapsed: true,
+                        icon: Icon(
+                          Icons.search,
+                          color: theme.tertiaryTextColor,
+                          size: theme.secondaryIconSize,
+                        ),
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(color: theme.tertiaryTextColor, fontSize: theme.primaryTextSize, fontFamily: theme.fontFamily),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: theme.primaryColorDark,
+                    ),
+                  ),
+                  AnimatedPositioned(
+                    duration: Duration(milliseconds: 375),
+                    top: 0,
+                    left: _isSearching ? MediaQuery.of(context).size.width - 110 : MediaQuery.of(context).size.width - 30,
+                    curve: Curves.easeOut,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 6.5),
+                      width: 100,
+                      alignment: Alignment(1.0, 0.0),
+                      child: AnimatedOpacity(
+                        opacity: _isSearching ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 200),
+                        child: TextButton(
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(color: theme.secondaryTextColor, fontSize: theme.primaryTextSize, fontFamily: theme.fontFamily),
+                          ),
+                          onPressed: () {
+                            FocusScopeNode currentFocus = FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                              currentFocus.focusedChild.unfocus();
+                            }
+                            setState(() {
+                              _isSearching = false;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: _addPalettesFuture,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  List<Widget> children = [];
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    _palettes = _palettes ?? [];
+                    for(int i = 0; i < _palettes.length; i++) {
+                      children.add(
+                        globalWidgets.getListItem(
+                          '${_palettes[i].brand}',
+                          '${_palettes[i].name}',
+                          i == _palettes.length - 1,
+                          () {
+                            if(_isComparing) {
+                              if(_idsSelected.contains(_palettes[i].id)) {
+                                setState(() {
+                                  _idsSelected.remove(_palettes[i].id);
+                                });
+                              } else if(_idsSelected.length < 3) {
+                                //can compare up to 3
+                                setState(() {
+                                  _idsSelected.add(_palettes[i].id);
+                                });
+                              }
+                            } else {
+                              navigation.push(
+                                context,
+                                Offset(1, 0),
+                                routes.ScreenRoutes.PaletteScreen,
+                                PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
+                              );
+                            }
+                          },
+                          hasCheckBox: _isComparing,
+                          isCheckBoxChecked: _idsSelected.contains(_palettes[i].id),
+                        ),
                       );
                     }
-                  },
-                  hasCheckBox: _isComparing,
-                  isCheckBoxChecked: _idsSelected.contains(_palettes[i].id),
-                ),
-              );
-            }
-          }
-          return ListView(
-            children: children,
-          );
-        },
+                  }
+                  return ListView(
+                    children: children,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       //check button to compare
       floatingActionButton: !_isComparing ? null : Container(
-        margin: EdgeInsets.only(right: 15, bottom: (MediaQuery.of(context).size.height * 0.1) + 15),
+        margin: EdgeInsets.only(right: 15, bottom: 15),
         width: 65,
         height: 65,
         child: FloatingActionButton(
