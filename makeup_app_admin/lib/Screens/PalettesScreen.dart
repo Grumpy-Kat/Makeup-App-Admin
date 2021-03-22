@@ -173,7 +173,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                 future: _addPalettesFuture,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   List<Widget> children = [];
-                  if(snapshot.connectionState == ConnectionState.done) {
+                  if(snapshot.connectionState != ConnectionState.active && snapshot.connectionState != ConnectionState.waiting) {
                     _palettes = _palettes ?? [];
                     for(int i = 0; i < _palettes.length; i++) {
                       children.add(
@@ -207,6 +207,19 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                         ),
                       );
                     }
+                  } else {
+                    children.add(
+                      Center(
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          margin: EdgeInsets.all(10),
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(theme.accentColor),
+                          ),
+                        ),
+                      ),
+                    );
                   }
                   return ListView(
                     children: children,
