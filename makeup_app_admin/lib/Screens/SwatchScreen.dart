@@ -68,7 +68,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
       //edit button
       rightBar: [
         IconButton(
-          constraints: BoxConstraints.tight(Size.fromWidth(theme.primaryIconSize + 15)),
+          constraints: BoxConstraints.tight(const Size.fromWidth(theme.primaryIconSize + 15)),
           icon: Icon(
             (_isEditing ? Icons.done : Icons.mode_edit),
             size: theme.primaryIconSize,
@@ -91,7 +91,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
           //swatch preview
           Container(
             height: 150,
-            margin: EdgeInsets.only(top: 20, bottom: 50),
+            margin: const EdgeInsets.only(top: 20, bottom: 50),
             child: swatchIcon,
           ),
           //all fields
@@ -116,7 +116,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
                 //delete button
                 Container(
                   height: 70,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   child: OutlineButton(
                     color: theme.bgColor,
                     borderSide: BorderSide(
@@ -156,7 +156,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
     return Container(
       height: height,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(left: 30, right: 30, bottom: 10),
+      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
       child: Row(
         children: <Widget>[
           Text(
@@ -187,7 +187,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
         decoration: InputDecoration(
           fillColor: _isEditing ? theme.primaryColorLight : theme.bgColor,
           filled: true,
-          contentPadding:  EdgeInsets.symmetric(horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
             borderSide: BorderSide(
@@ -225,7 +225,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
         controller: TextEditingController()..text = value.toString(),
         textAlign: TextAlign.left,
         onChanged: (String val) { onChange(double.parse(val)); },
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
         textInputAction: TextInputAction.done,
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
@@ -234,7 +234,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
         decoration: InputDecoration(
           fillColor: _isEditing ? theme.primaryColorLight : theme.bgColor,
           filled: true,
-          contentPadding:  EdgeInsets.symmetric(horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
             borderSide: BorderSide(
@@ -272,8 +272,8 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
           textAlign: TextAlign.left,
         ),
         if(_isEditing) IconButton(
-          padding: EdgeInsets.only(left: 12, bottom: 70),
-          constraints: BoxConstraints.tight(Size.fromWidth(theme.primaryIconSize + 15)),
+          padding: const EdgeInsets.only(left: 12, bottom: 70),
+          constraints: BoxConstraints.tight(const Size.fromWidth(theme.primaryIconSize + 15)),
           alignment: Alignment.topLeft,
           icon: Icon(
             Icons.colorize,
@@ -282,14 +282,14 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
           onPressed: () {
             globalWidgets.openDialog(
               context,
-                  (BuildContext context) {
+              (BuildContext context) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: (MediaQuery.of(context).size.height * 0.4) - 15),
                   //need custom dialog due to size constraints to work with positioning of color picker cursor
                   child: Dialog(
-                    insetPadding: EdgeInsets.symmetric(horizontal: 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    insetPadding: const EdgeInsets.symmetric(horizontal: 0),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
                     ),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
@@ -300,7 +300,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
                         children: <Widget> [
                           Expanded(
                             child: Container(
-                              padding: EdgeInsets.only(bottom: 30),
+                              padding: const EdgeInsets.only(bottom: 30),
                               alignment: Alignment.topLeft,
                               child: ColorPicker(
                                 btnText: '${getString('save')}',
@@ -323,8 +323,8 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
           },
         ),
         if(_isEditing) IconButton(
-          padding: EdgeInsets.only(bottom: 70),
-          constraints: BoxConstraints.tight(Size.fromWidth(theme.primaryIconSize + 15)),
+          padding: const EdgeInsets.only(bottom: 70),
+          constraints: BoxConstraints.tight(const Size.fromWidth(theme.primaryIconSize + 15)),
           alignment: Alignment.topLeft,
           icon: Icon(
             Icons.mode_edit,
@@ -350,7 +350,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
       55,
       label,
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: _isEditing ? theme.primaryColorLight : theme.bgColor,
           borderRadius: BorderRadius.circular(3.0),
@@ -376,7 +376,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
       55,
       label,
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: _isEditing ? theme.primaryColorLight : theme.bgColor,
           borderRadius: BorderRadius.circular(3.0),

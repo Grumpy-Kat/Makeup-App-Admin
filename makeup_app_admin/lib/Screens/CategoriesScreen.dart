@@ -34,7 +34,7 @@ class CategoriesScreenState extends State<CategoriesScreen> with ScreenState {
             () {
               navigation.push(
                 context,
-                Offset(1, 0),
+                const Offset(1, 0),
                 routes.ScreenRoutes.PalettesScreen,
                 PalettesScreen(status: PaletteStatus.Pending),
               );
@@ -47,7 +47,7 @@ class CategoriesScreenState extends State<CategoriesScreen> with ScreenState {
             () {
               navigation.push(
                 context,
-                Offset(1, 0),
+                const Offset(1, 0),
                 routes.ScreenRoutes.PalettesScreen,
                 PalettesScreen(status: PaletteStatus.Approved),
               );
@@ -60,7 +60,7 @@ class CategoriesScreenState extends State<CategoriesScreen> with ScreenState {
             () {
               navigation.push(
                 context,
-                Offset(1, 0),
+                const Offset(1, 0),
                 routes.ScreenRoutes.PalettesScreen,
                 PalettesScreen(status: PaletteStatus.Rejected),
               );
@@ -73,7 +73,7 @@ class CategoriesScreenState extends State<CategoriesScreen> with ScreenState {
             () {
               navigation.push(
                 context,
-                Offset(1, 0),
+                const Offset(1, 0),
                 routes.ScreenRoutes.PalettesScreen,
                 PalettesScreen(status: PaletteStatus.Deleted),
               );

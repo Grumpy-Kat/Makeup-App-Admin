@@ -12,8 +12,8 @@ Future<void> openDialog(BuildContext context, Widget Function(BuildContext) buil
 
 Widget getAlertDialog(BuildContext context, { Widget title, Widget content, List<Widget> actions }) {
   return AlertDialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    shape: const RoundedRectangleBorder(
+      borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
     ),
     title: title,
     content: content,
@@ -35,7 +35,7 @@ Future<void> openLoadingDialog(BuildContext context) {
           child: Container(
             width: 100,
             height: 100,
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           ),
         ),
       );
@@ -68,7 +68,7 @@ Future<void> openTextDialog(BuildContext context, String title, String error, St
                     }
                   }
                 },
-                    (String val) {
+                (String val) {
                   value = val;
                   if(required) {
                     if(!(value == '' || value == null)) {
@@ -211,7 +211,7 @@ Widget getNumField(BuildContext context, String label, double value, String erro
     textAlign: TextAlign.left,
     style: theme.primaryTextSecondary,
     textInputAction: TextInputAction.done,
-    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    keyboardType: const TextInputType.numberWithOptions(decimal: true),
     cursorColor: theme.accentColor,
     initialValue: value.toString(),
     inputFormatters: <TextInputFormatter>[
@@ -259,7 +259,7 @@ Widget getNumField(BuildContext context, String label, double value, String erro
 
 Widget getBackButton(OnVoidAction onPressed) {
   return IconButton(
-    constraints: BoxConstraints.tight(Size.fromWidth(26)),
+    constraints: BoxConstraints.tight(const Size.fromWidth(26)),
     icon: Icon(
       Icons.arrow_back_ios,
       size: 19,
@@ -338,7 +338,7 @@ Widget getListItem(String text1, String text2, bool isLast, OnVoidAction onTap, 
     child: Container(
       height: (text2 != null && text2 != '') ? 64 : 62,
       decoration: isLast ? decorationLast : decorationNotLast,
-      padding: EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
       child: child,
     ),
   );

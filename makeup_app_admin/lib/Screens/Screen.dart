@@ -32,13 +32,13 @@ mixin ScreenState {
                   children: <Widget>[
                     Container(
                       alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.symmetric(horizontal: 7),
+                      padding: const EdgeInsets.symmetric(horizontal: 7),
                       child: (leftBar != null) ? leftBar : Container(),
                     ),
                     Expanded(
                       child: Container(
                         alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.only(left: 2, right: 2, top: 3),
+                        padding: const EdgeInsets.only(left: 2, right: 2, top: 3),
                         child: AutoSizeText(
                           title,
                           style: theme.primaryTextBold,
@@ -51,7 +51,7 @@ mixin ScreenState {
                     ),
                     Container(
                       alignment: Alignment.centerRight,
-                      padding: EdgeInsets.symmetric(horizontal: 7),
+                      padding: const EdgeInsets.symmetric(horizontal: 7),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: rightBar ?? [],

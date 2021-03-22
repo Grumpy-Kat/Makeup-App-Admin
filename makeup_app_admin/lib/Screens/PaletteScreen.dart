@@ -260,7 +260,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
           Expanded(
             flex: 7,
             child: ListView(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               children: <Widget>[
                 globalWidgets.getTextField(
                   context,
@@ -275,7 +275,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                     _palette.brand = val;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 globalWidgets.getTextField(
@@ -291,7 +291,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                     _palette.name = val;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 globalWidgets.getNumField(
@@ -309,7 +309,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                     });
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 globalWidgets.getNumField(
@@ -327,7 +327,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                     });
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 FlatButton(
@@ -343,11 +343,11 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                     style: theme.accentTextBold,
                   ),
                 ),
-                if(btn1 != null) SizedBox(
+                if(btn1 != null) const SizedBox(
                   height: 7,
                 ),
                 if(btn1 != null) btn1,
-                if(btn1 != null && btn2 != null) SizedBox(
+                if(btn1 != null && btn2 != null) const SizedBox(
                   height: 7,
                 ),
                 if(btn2 != null) btn2,

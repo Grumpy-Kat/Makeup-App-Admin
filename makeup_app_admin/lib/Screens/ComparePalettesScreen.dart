@@ -105,7 +105,7 @@ class ComparePalettesScreenState extends State<ComparePalettesScreen> with Scree
                   onPressed: () async {
                     navigation.push(
                       context,
-                      Offset(1, 0),
+                      const Offset(1, 0),
                       routes.ScreenRoutes.PaletteScreen,
                       PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
                     );

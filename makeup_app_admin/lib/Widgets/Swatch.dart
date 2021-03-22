@@ -99,7 +99,7 @@ class SwatchIcon extends StatelessWidget {
         children: <Widget>[
           swatchImg,
           Align(
-            alignment: Alignment(1.15, -1.15),
+            alignment: const Alignment(1.15, -1.15),
             child: Container(
               width: 23,
               height: 23,

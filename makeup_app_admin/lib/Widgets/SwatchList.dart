@@ -49,7 +49,7 @@ mixin SwatchListState {
       scrollDirection: axis,
       primary: true,
       padding: EdgeInsets.all(padding),
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         mainAxisSpacing: spacing,
         crossAxisSpacing: spacing,
         crossAxisCount: crossAxisCount,
@@ -58,16 +58,14 @@ mixin SwatchListState {
       itemBuilder: (BuildContext context, int i) {
         if(swatchIcons.length == 0) {
           if(snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(theme.accentColor),
-            );
+            return const CircularProgressIndicator();
           }
         }
         if(swatchList.showPlus && swatchIcons.length == i) {
           return Ink(
             decoration: ShapeDecoration(
               color: theme.accentColor,
-              shape: CircleBorder(),
+              shape: const CircleBorder(),
             ),
             child: IconButton(
               color: theme.accentTextColor,

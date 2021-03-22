@@ -64,7 +64,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
       leftBar: globalWidgets.getBackButton(() => navigation.pop(context, false)),
       rightBar: [
         IconButton(
-          constraints: BoxConstraints.tight(Size.fromWidth(26)),
+          constraints: BoxConstraints.tight(const Size.fromWidth(26)),
           icon: Icon(
             Icons.compare,
             size: 19,
@@ -92,17 +92,17 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
           children: <Widget>[
             Container(
               width: MediaQuery.of(context).size.width,
-              alignment: Alignment(-1.0, 0.0),
+              alignment: const Alignment(-1.0, 0.0),
               child: Stack(
                 overflow: Overflow.visible,
                 children: [
                   AnimatedContainer(
-                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    duration: Duration(milliseconds: 375),
+                    margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    duration: const Duration(milliseconds: 375),
                     width: _isSearching ? MediaQuery.of(context).size.width - 103 : MediaQuery.of(context).size.width - 30,
-                    padding: EdgeInsets.symmetric(horizontal: 11, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
                     curve: Curves.easeOut,
-                    alignment: Alignment(-1.0, 0.0),
+                    alignment: const Alignment(-1.0, 0.0),
                     child: TextFormField(
                       initialValue: _search,
                       textInputAction: TextInputAction.search,
@@ -136,17 +136,17 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                     ),
                   ),
                   AnimatedPositioned(
-                    duration: Duration(milliseconds: 375),
+                    duration: const Duration(milliseconds: 375),
                     top: 0,
                     left: _isSearching ? MediaQuery.of(context).size.width - 110 : MediaQuery.of(context).size.width - 30,
                     curve: Curves.easeOut,
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 6.5),
+                      padding: const EdgeInsets.symmetric(vertical: 6.5),
                       width: 100,
-                      alignment: Alignment(1.0, 0.0),
+                      alignment: const Alignment(1.0, 0.0),
                       child: AnimatedOpacity(
                         opacity: _isSearching ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         child: TextButton(
                           child: Text(
                             'Cancel',
@@ -196,7 +196,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                             } else {
                               navigation.push(
                                 context,
-                                Offset(1, 0),
+                                const Offset(1, 0),
                                 routes.ScreenRoutes.PaletteScreen,
                                 PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
                               );
@@ -213,10 +213,8 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                         child: Container(
                           width: 70,
                           height: 70,
-                          margin: EdgeInsets.all(10),
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(theme.accentColor),
-                          ),
+                          margin: const EdgeInsets.all(10),
+                          child: const CircularProgressIndicator(),
                         ),
                       ),
                     );
@@ -232,7 +230,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
       ),
       //check button to compare
       floatingActionButton: !_isComparing ? null : Container(
-        margin: EdgeInsets.only(right: 15, bottom: 15),
+        margin: const EdgeInsets.only(right: 15, bottom: 15),
         width: 65,
         height: 65,
         child: FloatingActionButton(
@@ -247,7 +245,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
             if(_idsSelected.length > 1) {
               navigation.push(
                 context,
-                Offset(1, 0),
+                const Offset(1, 0),
                 routes.ScreenRoutes.ComparePalettesScreen,
                 ComparePalettesScreen(paletteIds: _idsSelected),
               );
