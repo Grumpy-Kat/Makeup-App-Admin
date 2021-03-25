@@ -7,6 +7,8 @@ import 'dart:io';
 import 'dart:async';
 import 'Widgets/Swatch.dart';
 import 'ColorMath/ColorObjects.dart';
+import 'ColorMath/ColorSorting.dart';
+import 'localizationIO.dart';
 
 Map<String, String> _finishes = { '0': 'finish_matte', '1': 'finish_satin', '2': 'finish_shimmer', '3': 'finish_metallic', '4': 'finish_glitter' };
 
@@ -65,6 +67,16 @@ Future<String> saveSwatch(Swatch swatch) async {
   String price = swatch.price.toStringAsFixed(2);
   //color name
   String colorName = removeAllChars(swatch.colorName.trim(), [r';', r'\\']);
+  if(colorName != '' && !colorName.contains('color_')) {
+    //translate color name
+    List<String> possibleColorNames = createColorNames().keys.toList();
+    for(int i = 0; i < possibleColorNames.length; i++) {
+      if(getString(possibleColorNames[i]).toLowerCase() == colorName.toLowerCase()) {
+        colorName = possibleColorNames[i];
+        break;
+      }
+    }
+  }
   //combined
   return '$color;$finish;$brand;$palette;$shade;$weight;$price;$colorName\n';
 }
