@@ -264,7 +264,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
   //color field that displays color name and opens popup to color picker
   Widget getColorField(String label, RGBColor color, String colorNameOrg, OnRGBColorAction onChange, OnStringAction onNameChange) {
     String localizedColorName = (colorNameOrg.contains('color_') ? getString(colorNameOrg) : globalWidgets.toTitleCase(colorNameOrg));
-    String colorName = localizedColorName == '' ? getString(getColorName(_swatch.color)) : localizedColorName;
+    String colorName = colorNameOrg == '' ? getString(getColorName(_swatch.color)) : localizedColorName;
     Widget child = Row(
       children: <Widget>[
         Text(
