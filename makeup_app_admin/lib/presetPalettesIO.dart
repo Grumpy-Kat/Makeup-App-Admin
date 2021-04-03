@@ -201,8 +201,8 @@ Future<Map<String, Palette>> loadAllFormatted({ bool override = false, overrideI
       }
       Palette palette = Palette(
         id: info[i].id,
-        brand: globalWidgets.toTitleCase(data['brand'] ?? ''),
-        name: globalWidgets.toTitleCase(data['name'] ?? ''),
+        brand: globalWidgets.toTitleCase(data['brand'] ?? '').trim(),
+        name: globalWidgets.toTitleCase(data['name'] ?? '').trim(),
         weight: double.parse((data['weight'] ?? 0).toString()),
         price: double.parse((data['price'] ?? 0).toString()),
         swatches: swatches,
