@@ -65,7 +65,7 @@ Future<void> removeSwatch(String paletteId, int swatchId) async {
   }
   if(paletteId != '' && swatchId >= 0) {
     Palette palette = palettes[paletteId];
-    palette.swatches.remove(swatchId);
+    palette.swatches.removeAt(swatchId);
     await save(palette);
   }
 }

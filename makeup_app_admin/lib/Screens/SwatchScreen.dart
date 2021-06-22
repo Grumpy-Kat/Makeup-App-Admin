@@ -12,6 +12,7 @@ import '../presetPalettesIO.dart' as IO;
 import '../types.dart';
 import '../localizationIO.dart';
 import 'Screen.dart';
+import 'PaletteScreen.dart';
 
 class SwatchScreen extends StatefulWidget {
   final String paletteId;
@@ -29,6 +30,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
   bool _isEditing = false;
   bool _hasChanged = false;
   bool _hasSaved = false;
+  bool _hasDeleted = false;
 
   @override
   void initState() {
@@ -117,19 +119,19 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
                 Container(
                   height: 70,
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  child: OutlineButton(
-                    color: theme.bgColor,
-                    borderSide: BorderSide(
-                      color: theme.primaryColorDark,
-                    ),
+                  child: globalWidgets.getOutlineButton(
+                    bgColor: theme.bgColor,
+                    outlineColor: theme.primaryColorDark,
                     onPressed: () async {
                       await globalWidgets.openTwoButtonDialog(
                         context,
                         getString('swatch_deleteWarning'),
                         () async {
                           await IO.removeSwatch(_swatch.paletteId, _swatch.id);
+                          PaletteScreen.hasDeletedSwatch = true;
                           _hasSaved = true;
                           _hasChanged = true;
+                          _hasDeleted = true;
                           exit();
                         },
                         () { },
@@ -437,12 +439,14 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
   }
 
   @override
-  void onExit() async {
+  Future<void> onExit() async {
     super.onExit();
     //save changes to swatch
     if(_hasChanged && !_hasSaved) {
       await IO.editSwatch(_swatch.paletteId, _swatch);
-      await IO.loadAllFormatted();
+      if(!_hasDeleted) {
+        await IO.loadAllFormatted();
+      }
     }
   }
 }

@@ -30,6 +30,7 @@ dependencies:
   auto_size_text: ^2.1.0
   string_validator: ^0.1.4
   archive:
+  drag_and_drop_gridview: ^1.0.8
 
 flutter_icons:
   ios: true

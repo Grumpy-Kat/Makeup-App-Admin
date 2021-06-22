@@ -60,7 +60,7 @@ Future<void> openTextDialog(BuildContext context, String title, String error, St
                 value,
                 error,
                 showErrorText,
-                    (String val) {
+                (String val) {
                   value = val;
                   if(required) {
                     if(showErrorText && !(val == '' || val == null)) {
@@ -81,8 +81,8 @@ Future<void> openTextDialog(BuildContext context, String title, String error, St
                 }
             ),
             actions: <Widget>[
-              FlatButton(
-                color: theme.accentColor,
+              getFlatButton(
+                bgColor: theme.accentColor,
                 onPressed: () {
                   if(required && (value == '' || value == null)) {
                     setState(() { showErrorText = true; });
@@ -113,8 +113,8 @@ Future<void> openTwoButtonDialog(BuildContext context, String title, OnVoidActio
         context,
         title: Text(title, style: theme.primaryTextPrimary),
         actions: <Widget>[
-          FlatButton(
-            color: theme.accentColor,
+          getFlatButton(
+            bgColor: theme.accentColor,
             onPressed: () {
               //doesn't use navigation because is popping an Dialog
               Navigator.pop(context);
@@ -125,8 +125,8 @@ Future<void> openTwoButtonDialog(BuildContext context, String title, OnVoidActio
               style: theme.accentTextBold,
             ),
           ),
-          FlatButton(
-            color: theme.accentColor,
+          getFlatButton(
+            bgColor: theme.accentColor,
             onPressed: () {
               Navigator.pop(context);
               onPressedNo();
@@ -163,8 +163,9 @@ PageRouteBuilder slideTransition(BuildContext context, Widget nextScreen, int du
   );
 }
 
-Widget getTextField(BuildContext context, String label, String value, String error, bool showErrorText, OnStringAction onChanged, OnStringAction onSubmitted) {
+Widget getTextField(BuildContext context, String label, String value, String error, bool showErrorText, OnStringAction onChanged, OnStringAction onSubmitted, { Key key }) {
   return TextFormField(
+    key: key,
     textAlign: TextAlign.left,
     style: theme.primaryTextSecondary,
     textCapitalization: TextCapitalization.words,
@@ -206,8 +207,9 @@ Widget getTextField(BuildContext context, String label, String value, String err
   );
 }
 
-Widget getNumField(BuildContext context, String label, double value, String error, bool showErrorText, OnDoubleAction onChanged, OnDoubleAction onSubmitted) {
+Widget getNumField(BuildContext context, String label, double value, String error, bool showErrorText, OnDoubleAction onChanged, OnDoubleAction onSubmitted, { Key key }) {
   return TextFormField(
+    key: key,
     textAlign: TextAlign.left,
     style: theme.primaryTextSecondary,
     textInputAction: TextInputAction.done,
@@ -341,6 +343,63 @@ Widget getListItem(String text1, String text2, bool isLast, OnVoidAction onTap, 
       padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
       child: child,
     ),
+  );
+}
+
+Widget getFlatButton({ OnVoidAction onPressed, Widget child, EdgeInsets padding, Color bgColor, Color splashColor }) {
+  return TextButton(
+    onPressed: onPressed,
+    style: TextButton.styleFrom(
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
+      backgroundColor: bgColor ?? Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(const Radius.circular(2)),
+      ),
+    ).copyWith(
+      overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          if(states.contains(MaterialState.pressed)) {
+            return splashColor ?? theme.accentColor.withAlpha(130);
+          }
+          return null;
+        },
+      ),
+    ),
+    child: child,
+  );
+}
+
+Widget getOutlineButton({ OnVoidAction onPressed, Widget child, EdgeInsets padding, Color bgColor, Color outlineColor, double outlineWidth, Color splashColor }) {
+  return OutlinedButton(
+    onPressed: onPressed,
+    style: OutlinedButton.styleFrom(
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 16),
+      backgroundColor: bgColor ?? Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(const Radius.circular(2)),
+      ),
+    ).copyWith(
+      side: MaterialStateProperty.resolveWith<BorderSide>(
+        (Set<MaterialState> states) {
+          if(states.contains(MaterialState.pressed)) {
+            return BorderSide(
+              color: outlineColor ?? theme.primaryColorDark,
+              width: outlineWidth ?? 1,
+            );
+          }
+          return null;
+        },
+      ),
+      overlayColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+          if(states.contains(MaterialState.pressed)) {
+            return splashColor ?? theme.accentColor.withAlpha(130);
+          }
+          return null;
+        },
+      ),
+    ),
+    child: child,
   );
 }
 
