@@ -12,4 +12,4 @@ typedef OnDoubleAction = void Function(double);
 //same thing, but for clarity
 typedef OnSwatchAction = void Function(String, int);
 typedef OnSwatchListAction = void Function(String, List<Swatch>);
-typedef OnScreenAction = StatefulWidget Function(BuildContext);
+typedef OnScreenAction = StatefulWidget Function(BuildContext?);

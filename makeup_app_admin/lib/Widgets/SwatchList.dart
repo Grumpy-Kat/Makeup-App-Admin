@@ -5,28 +5,28 @@ import '../theme.dart' as theme;
 import '../types.dart';
 
 class SwatchList {
-  Future addSwatches;
+  Future? addSwatches;
   //keep original for when changed with sorting or filtering
-  Future orgAddSwatches;
+  Future? orgAddSwatches;
 
   final bool showInfoBox;
 
   final bool showPlus;
-  final OnVoidAction onPlusPressed;
+  final OnVoidAction? onPlusPressed;
 
   final bool showDelete;
 
-  SwatchList({ @required this.addSwatches, this.orgAddSwatches, this.showInfoBox = true, this.showPlus = false, this.onPlusPressed, this.showDelete = false });
+  SwatchList({ required this.addSwatches, this.orgAddSwatches, this.showInfoBox = true, this.showPlus = false, this.onPlusPressed, this.showDelete = false });
 }
 
 mixin SwatchListState {
-  SwatchList swatchList;
+  late SwatchList swatchList;
 
   void init(SwatchList swatchList) {
     this.swatchList = swatchList;
   }
 
-  Widget buildSwatchList(BuildContext context, AsyncSnapshot snapshot, List<SwatchIcon> swatchIcons, { Axis axis = Axis.vertical, int crossAxisCount = 3, double padding = 20, double spacing = 35 }) {
+  Widget buildSwatchList(BuildContext context, AsyncSnapshot snapshot, List<SwatchIcon?> swatchIcons, { Axis axis = Axis.vertical, int crossAxisCount = 3, double padding = 20, double spacing = 35 }) {
     int itemCount = 0;
     if(snapshot.connectionState != ConnectionState.active && snapshot.connectionState != ConnectionState.waiting) {
       //check if any swatches are null
@@ -77,7 +77,7 @@ mixin SwatchListState {
             ),
           );
         }
-        return swatchIcons[i];
+        return swatchIcons[i]!;
       }
     );
   }

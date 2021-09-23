@@ -15,8 +15,8 @@ import 'Screen.dart';
 import 'PaletteScreen.dart';
 
 class SwatchScreen extends StatefulWidget {
-  final String paletteId;
-  final int swatchId;
+  final String? paletteId;
+  final int? swatchId;
 
   SwatchScreen({ this.paletteId, this.swatchId });
 
@@ -25,7 +25,7 @@ class SwatchScreen extends StatefulWidget {
 }
 
 class SwatchScreenState extends State<SwatchScreen> with ScreenState {
-  static Swatch _swatch;
+  static late Swatch _swatch;
 
   bool _isEditing = false;
   bool _hasChanged = false;
@@ -36,7 +36,7 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
   void initState() {
     super.initState();
     //get swatch from id
-    _swatch = IO.getSwatch(widget.paletteId, widget.swatchId);
+    _swatch = IO.getSwatch(widget.paletteId!, widget.swatchId!)!;
   }
 
   @override
@@ -396,9 +396,9 @@ class SwatchScreenState extends State<SwatchScreen> with ScreenState {
           isExpanded: true,
           style: theme.primaryTextPrimary,
           value: value,
-          onChanged: !_isEditing ? null : (String value) {
+          onChanged: !_isEditing ? null : (String? value) {
             if(_isEditing) {
-              onChange(value);
+              onChange(value ?? '');
             }
           },
           icon: null,

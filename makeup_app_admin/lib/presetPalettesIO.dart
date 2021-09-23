@@ -6,20 +6,20 @@ import 'globalIO.dart';
 import 'globalWidgets.dart' as globalWidgets;
 import 'types.dart';
 
-List<DocumentSnapshot> docs;
-Map<String, Palette> palettes;
+List<DocumentSnapshot>? docs;
+Map<String, Palette>? palettes;
 //palettes will include everything, while these are for easier access and may be more common to access
-Map<String, Palette> approvedPalettes;
-Map<String, Palette> pendingPalettes;
-Map<String, Palette> rejectedPalettes;
-Map<String, Palette> deletedPalettes;
+Map<String, Palette>? approvedPalettes;
+Map<String, Palette>? pendingPalettes;
+Map<String, Palette>? rejectedPalettes;
+Map<String, Palette>? deletedPalettes;
 
 List<OnVoidAction> onSaveChanged = [];
 bool hasSaveChanged = true;
 bool isLoading = true;
 
-CollectionReference _databaseCompleted;
-CollectionReference _databasePending;
+late CollectionReference _databaseCompleted;
+late CollectionReference _databasePending;
 
 void init() {
   _databaseCompleted = FirebaseFirestore.instance.collection('presetPalettes');
@@ -33,19 +33,18 @@ void listenOnSaveChanged(OnVoidAction listener) {
 Map<String, Palette> getStatusList(PaletteStatus status) {
   switch(status) {
     case PaletteStatus.Approved: {
-      return approvedPalettes;
+      return approvedPalettes!;
     }
     case PaletteStatus.Pending: {
-      return pendingPalettes;
+      return pendingPalettes!;
     }
     case PaletteStatus.Rejected: {
-      return rejectedPalettes;
+      return rejectedPalettes!;
     }
     case PaletteStatus.Deleted: {
-      return deletedPalettes;
+      return deletedPalettes!;
     }
   }
-  return {};
 }
 
 Future<void> editSwatch(String paletteId, Swatch swatch) async {
@@ -53,7 +52,7 @@ Future<void> editSwatch(String paletteId, Swatch swatch) async {
     await loadAllFormatted();
   }
   if(paletteId != '' && swatch.id >= 0) {
-    Palette palette = palettes[paletteId];
+    Palette palette = palettes![paletteId]!;
     palette.swatches[swatch.id] = swatch;
     await save(palette);
   }
@@ -64,7 +63,7 @@ Future<void> removeSwatch(String paletteId, int swatchId) async {
     await loadAllFormatted();
   }
   if(paletteId != '' && swatchId >= 0) {
-    Palette palette = palettes[paletteId];
+    Palette palette = palettes![paletteId]!;
     palette.swatches.removeAt(swatchId);
     await save(palette);
   }
@@ -74,7 +73,7 @@ Future<void> removePalette(String paletteId) async {
   hasSaveChanged = true;
   print('Removing palette $paletteId');
   DocumentSnapshot doc;
-  if(palettes[paletteId].status == PaletteStatus.Approved) {
+  if(palettes![paletteId]!.status == PaletteStatus.Approved) {
     doc = await _databaseCompleted.doc(paletteId).get();
   } else {
     doc = await _databasePending.doc(paletteId).get();
@@ -82,20 +81,20 @@ Future<void> removePalette(String paletteId) async {
   await doc.reference.delete();
 }
 
-Swatch getSwatch(String paletteId, int swatchId) {
-  Palette palette = getPalette(paletteId);
+Swatch? getSwatch(String paletteId, int swatchId) {
+  Palette? palette = getPalette(paletteId);
   if(palette != null && palette.swatches.length > swatchId) {
     return palette.swatches[swatchId];
   }
   return null;
 }
 
-Palette getPalette(String paletteId) {
+Palette? getPalette(String paletteId) {
   if(palettes == null || hasSaveChanged) {
     loadAllFormatted();
   }
-  if(palettes.containsKey(paletteId)) {
-    return palettes[paletteId];
+  if(palettes!.containsKey(paletteId)) {
+    return palettes![paletteId];
   }
   return null;
 }
@@ -172,9 +171,9 @@ Future<void> save(Palette palette) async {
 Future<List<DocumentSnapshot>> load({ bool override = false }) async {
   if(docs == null || hasSaveChanged || override) {
     docs = (await _databaseCompleted.get()).docs;
-    docs.addAll((await _databasePending.get()).docs);
+    docs!.addAll((await _databasePending.get()).docs);
   }
-  return docs;
+  return docs!;
 }
 
 Future<Map<String, Palette>> loadAllFormatted({ bool override = false, overrideInner = false }) async {
@@ -187,13 +186,16 @@ Future<Map<String, Palette>> loadAllFormatted({ bool override = false, overrideI
     deletedPalettes = {};
     List<DocumentSnapshot> info = await load(override: overrideInner);
     for(int i = 0; i < info.length; i++) {
-      Map<String, dynamic> data = info[i].data();
+      Map<String, dynamic> data = info[i].data()!;
       List<Swatch> swatches = [];
       List<String> swatchLines = decompress(data['data']).split('\n');
       for(int j = 0; j < swatchLines.length; j++) {
         String line = swatchLines[j];
         if(line != '') {
-          swatches.add(await loadSwatch(info[i].id, swatches.length, line));
+          Swatch? swatch = await loadSwatch(info[i].id, swatches.length, line);
+          if(swatch != null) {
+            swatches.add(swatch);
+          }
         }
       }
       if(swatches.length == 0) {
@@ -208,18 +210,18 @@ Future<Map<String, Palette>> loadAllFormatted({ bool override = false, overrideI
         swatches: swatches,
         status: data.containsKey('status') ? PaletteStatus.values[data['status']] : PaletteStatus.Approved,
       );
-      palettes[palette.id] = palette;
+      palettes![palette.id] = palette;
     }
-    print('${palettes.length} palettes');
+    print('${palettes!.length} palettes');
     hasSaveChanged = false;
     isLoading = false;
     palettes = await sort();
   }
-  return palettes;
+  return palettes!;
 }
 
 Future<Map<String, Palette>> sort() async {
-  List<Palette> sortedPalettes = palettes.values.toList();
+  List<Palette> sortedPalettes = palettes!.values.toList();
   sortedPalettes.sort(
     (Palette a, Palette b) {
       int brand = a.brand.compareTo(b.brand);
@@ -230,41 +232,41 @@ Future<Map<String, Palette>> sort() async {
       }
     }
   );
-  palettes.clear();
+  palettes!.clear();
   for(int i = 0; i < sortedPalettes.length; i++) {
     Palette palette = sortedPalettes[i];
-    palettes[palette.id] = palette;
+    palettes![palette.id] = palette;
     getStatusList(palette.status)[palette.id] = palette;
   }
-  return palettes;
+  return palettes!;
 }
 
 Future<Map<String, Palette>> loadApprovedFormatted({ bool override = false, overrideInner = false }) async {
   if(palettes == null || hasSaveChanged || override || overrideInner) {
     await loadAllFormatted(override: override, overrideInner: overrideInner);
   }
-  return approvedPalettes;
+  return approvedPalettes!;
 }
 
 Future<Map<String, Palette>> loadPendingFormatted({ bool override = false, overrideInner = false }) async {
   if(palettes == null || hasSaveChanged || override || overrideInner) {
     await loadAllFormatted(override: override, overrideInner: overrideInner);
   }
-  return pendingPalettes;
+  return pendingPalettes!;
 }
 
 Future<Map<String, Palette>> loadRejectedFormatted({ bool override = false, overrideInner = false }) async {
   if(palettes == null || hasSaveChanged || override || overrideInner) {
     await loadAllFormatted(override: override, overrideInner: overrideInner);
   }
-  return rejectedPalettes;
+  return rejectedPalettes!;
 }
 
 Future<Map<String, Palette>> loadDeletedFormatted({ bool override = false, overrideInner = false }) async {
   if(palettes == null || hasSaveChanged || override || overrideInner) {
     await loadAllFormatted(override: override, overrideInner: overrideInner);
   }
-  return deletedPalettes;
+  return deletedPalettes!;
 }
 
 Future<Map<String, Palette>> loadStatusFormatted(PaletteStatus status, { bool override = false, overrideInner = false }) async {

@@ -11,9 +11,9 @@ import 'Screen.dart';
 import 'PaletteScreen.dart';
 
 class ComparePalettesScreen extends StatefulWidget {
-  static List<String> paletteIds;
+  static List<String>? paletteIds;
 
-  ComparePalettesScreen({ List<String> paletteIds }) {
+  ComparePalettesScreen({ List<String>? paletteIds }) {
     if(paletteIds != null && paletteIds.length > 0) {
       //sets screen info
       ComparePalettesScreen.paletteIds = paletteIds;
@@ -29,9 +29,9 @@ class ComparePalettesScreenState extends State<ComparePalettesScreen> with Scree
   List<Palette> _palettes = [];
   List<List<Swatch>> _swatches = [];
   List<List<SwatchIcon>> _swatchIcons = [];
-  Future<List<List<Swatch>>> _swatchesFuture;
+  Future<List<List<Swatch>>>? _swatchesFuture;
 
-  SwatchList _swatchList;
+  late SwatchList _swatchList;
 
   @override
   void initState() {
@@ -44,10 +44,10 @@ class ComparePalettesScreenState extends State<ComparePalettesScreen> with Scree
     _palettes = [];
     _swatches = [];
     _swatchIcons = [];
-    for(int i = 0; i < ComparePalettesScreen.paletteIds.length; i++) {
+    for(int i = 0; i < ComparePalettesScreen.paletteIds!.length; i++) {
       _swatches.add([]);
       _swatchIcons.add([]);
-      Palette palette = IO.getPalette(ComparePalettesScreen.paletteIds[i]);
+      Palette palette = IO.getPalette(ComparePalettesScreen.paletteIds![i])!;
       _palettes.add(palette);
       _swatches[i] = palette.swatches;
       for(int j = 0; j < _swatches[i].length; j++) {
@@ -99,20 +99,22 @@ class ComparePalettesScreenState extends State<ComparePalettesScreen> with Scree
                     },
                   ),
                 ),
-                FlatButton(
+                Container(
                   height: 40,
-                  color: theme.accentColor,
-                  onPressed: () async {
-                    navigation.push(
-                      context,
-                      const Offset(1, 0),
-                      routes.ScreenRoutes.PaletteScreen,
-                      PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
-                    );
-                  },
-                  child: Text(
-                    'Choose',
-                    style: theme.accentTextBold,
+                  child: globalWidgets.getFlatButton(
+                    bgColor: theme.accentColor,
+                    onPressed: () async {
+                      navigation.push(
+                        context,
+                        const Offset(1, 0),
+                        routes.ScreenRoutes.PaletteScreen,
+                        PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
+                      );
+                    },
+                    child: Text(
+                      'Choose',
+                      style: theme.accentTextBold,
+                    ),
                   ),
                 ),
               ],

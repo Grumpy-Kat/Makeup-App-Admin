@@ -6,11 +6,11 @@ import '../Widgets/SwatchList.dart';
 import '../types.dart';
 
 mixin ReorderableSwatchListState {
-  SwatchList swatchList;
-  OnSwatchListAction updateSwatches;
+  late SwatchList swatchList;
+  OnSwatchListAction? updateSwatches;
 
-  List<SwatchIcon> reordering;
-  int draggingIndex;
+  List<SwatchIcon?>? reordering;
+  int? draggingIndex;
 
   void initReorderable(SwatchList swatchList, OnSwatchListAction updateSwatches) {
     this.swatchList = swatchList;
@@ -18,7 +18,7 @@ mixin ReorderableSwatchListState {
   }
 
 
-  Widget buildReorderableSwatchList(BuildContext context, AsyncSnapshot snapshot, List<SwatchIcon> swatchIcons, { int crossAxisCount = 3, double padding = 20, double spacing = 35 }) {
+  Widget buildReorderableSwatchList(BuildContext context, AsyncSnapshot snapshot, List<SwatchIcon?> swatchIcons, { int crossAxisCount = 3, double padding = 20, double spacing = 35 }) {
     int itemCount = 0;
     if(snapshot.connectionState != ConnectionState.active && snapshot.connectionState != ConnectionState.waiting) {
       //check if any swatches are null
@@ -80,18 +80,18 @@ mixin ReorderableSwatchListState {
     );
   }
 
-  List<SwatchIcon> _reorder(List<SwatchIcon> swatchIcons, int oldIndex, int newIndex) {
-    swatchIcons = [...reordering];
+  List<SwatchIcon?> _reorder(List<SwatchIcon?> swatchIcons, int oldIndex, int newIndex) {
+    swatchIcons = [...reordering!];
     // Can't simplify into loop by reversing oldIndex and newIndex because order matters and loops would not be equivalent
     if(oldIndex > newIndex) {
       for(int i = oldIndex; i > newIndex; i--) {
-        SwatchIcon temp = swatchIcons[i - 1];
+        SwatchIcon? temp = swatchIcons[i - 1];
         swatchIcons[i - 1] = swatchIcons[i];
         swatchIcons[i] = temp;
       }
     } else {
       for(int i = oldIndex; i < newIndex; i++) {
-        SwatchIcon temp = swatchIcons[i + 1];
+        SwatchIcon? temp = swatchIcons[i + 1];
         swatchIcons[i + 1] = swatchIcons[i];
         swatchIcons[i] = temp;
       }
@@ -99,17 +99,17 @@ mixin ReorderableSwatchListState {
     return swatchIcons;
   }
 
-  void updateSwatchList(List<SwatchIcon> swatchIcons) {
+  void updateSwatchList(List<SwatchIcon?> swatchIcons) {
     if(swatchIcons.length == 0) {
       //can't do anything
       return;
     }
-    String paletteId = swatchIcons[0].paletteId;
+    String paletteId = swatchIcons[0]!.paletteId;
     List<Swatch> swatches = [];
     for(int i = 0; i < swatchIcons.length; i++) {
-      swatches.add(swatchIcons[i].swatch);
+      swatches.add(swatchIcons[i]!.swatch!);
     }
-    updateSwatches(paletteId, swatches);
+    updateSwatches!(paletteId, swatches);
   }
 
   void setState(OnVoidAction func);

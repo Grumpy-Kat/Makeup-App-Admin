@@ -17,7 +17,7 @@ class Swatch {
   double weight = 0.0;
   double price = 0.0;
 
-  Swatch({ @required this.paletteId, @required this.id, @required this.color, @required this.finish,this.colorName = '', this.brand = '', this.palette = '', this.shade = '', this.weight = 0.0, this.price = 0.0 });
+  Swatch({ required this.paletteId, required this.id, required this.color, required this.finish,this.colorName = '', this.brand = '', this.palette = '', this.shade = '', this.weight = 0.0, this.price = 0.0 });
 
   int compareTo(Swatch other, List<double> Function(Swatch) comparator) {
     List<double> thisValues = comparator(this);
@@ -61,7 +61,7 @@ class Swatch {
 }
 
 class SwatchIcon extends StatelessWidget {
-  final Swatch swatch;
+  final Swatch? swatch;
   final String paletteId;
   final int swatchId;
 
@@ -70,9 +70,9 @@ class SwatchIcon extends StatelessWidget {
 
   final bool showInfoBox;
 
-  final OnSwatchAction onDelete;
+  final OnSwatchAction? onDelete;
 
-  SwatchIcon.swatch(this.swatch, { this.showInfoBox = true, this.onDelete }) : this.paletteId = swatch.paletteId, this.swatchId = swatch.id;
+  SwatchIcon.swatch(this.swatch, { this.showInfoBox = true, this.onDelete }) : this.paletteId = swatch!.paletteId, this.swatchId = swatch.id;
 
   SwatchIcon.id(this.swatchId, this.paletteId, { this.showInfoBox = true, this.onDelete }) : this.swatch = IO.getSwatch(paletteId, swatchId), super(key: GlobalKey(debugLabel: '$paletteId.$swatchId'));
 
@@ -84,8 +84,8 @@ class SwatchIcon extends StatelessWidget {
       color = [0.5, 0.5, 0.5];
       finish = 'finish_matte';
     } else {
-      color =  swatch.color.getValues();
-      finish = swatch.finish.toLowerCase();
+      color =  swatch!.color.getValues();
+      finish = swatch!.finish.toLowerCase();
     }
     final Widget swatchImg = Image(
       key: childKey,
@@ -112,7 +112,7 @@ class SwatchIcon extends StatelessWidget {
                   color: theme.primaryColor,
                 ),
                 onPressed: () {
-                  onDelete(paletteId, swatchId);
+                  onDelete!(paletteId, swatchId);
                 },
               ),
             ),
@@ -122,10 +122,10 @@ class SwatchIcon extends StatelessWidget {
     } else {
       child = swatchImg;
     }
-    if(showInfoBox) {
+    if(swatch != null && showInfoBox) {
       return InfoBox(
         key: infoBoxKey,
-        swatch: swatch,
+        swatch: swatch!,
         onTap: _onTap,
         child: child,
         childKey: childKey,
@@ -139,7 +139,7 @@ class SwatchIcon extends StatelessWidget {
 
   void _onTap() {
     if(showInfoBox) {
-      (infoBoxKey?.currentState as InfoBoxState).open();
+      (infoBoxKey.currentState as InfoBoxState).open();
     }
   }
 }

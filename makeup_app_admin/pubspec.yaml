@@ -14,7 +14,7 @@ description: Makeup App
 version: 1.0.0
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -22,13 +22,13 @@ dependencies:
   flutter_test:
     sdk: flutter
   path_provider:
-  firebase_core: ^0.7.0
-  cloud_firestore: ^0.16.0
-  firebase_auth: ^0.20.0+1
+  firebase_core: ^1.0.3
+  cloud_firestore: ^1.0.4
+  firebase_auth: ^1.0.3
   cupertino_icons:
-  permission_handler: ^5.0.1+1
-  auto_size_text: ^2.1.0
-  string_validator: ^0.1.4
+  permission_handler: ^6.1.1
+  auto_size_text: ^3.0.0-nullsafety.0
+  string_validator: ^0.3.0
   archive:
   drag_and_drop_gridview: ^1.0.8
 

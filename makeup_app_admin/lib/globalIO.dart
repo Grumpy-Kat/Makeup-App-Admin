@@ -89,7 +89,7 @@ String removeAllChars(String orgString, List<String> patterns) {
   return newString;
 }
 
-Future<Swatch> loadSwatch(String paletteId, int id, String line) async {
+Future<Swatch?> loadSwatch(String paletteId, int id, String line) async {
   if(line == '') {
     return null;
   }
@@ -98,7 +98,7 @@ Future<Swatch> loadSwatch(String paletteId, int id, String line) async {
   List<String> colorValues = lineSplit[0].split(',');
   RGBColor color = RGBColor(double.parse(colorValues[0]), double.parse(colorValues[1]), double.parse(colorValues[2]));
   //finish
-  String finish = _finishes[lineSplit[1]];
+  String finish = _finishes[lineSplit[1]]!;
   //brand
   String brand = lineSplit[2];
   //palette

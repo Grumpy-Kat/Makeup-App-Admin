@@ -3,7 +3,6 @@ import 'Screens/PalettesScreen.dart';
 import 'Screens/PaletteScreen.dart';
 import 'Screens/ComparePalettesScreen.dart';
 import 'Screens/SwatchScreen.dart';
-import 'Widgets/Palette.dart';
 import 'types.dart';
 
 Map<String, OnScreenAction> routes = {};
@@ -29,10 +28,10 @@ void setRoutes() {
     '/swatchScreen': (context) => SwatchScreen(paletteId: '', swatchId: 0),
   };
   enumRoutes = {
-    ScreenRoutes.CategoriesScreen: routes['/categoriesScreen'],
-    ScreenRoutes.PalettesScreen: routes['/palettesScreen'],
-    ScreenRoutes.PaletteScreen: routes['/paletteScreen'],
-    ScreenRoutes.ComparePalettesScreen: routes['/comparePalettesScreen'],
-    ScreenRoutes.SwatchScreen: routes['/swatchScreen'],
+    ScreenRoutes.CategoriesScreen: routes['/categoriesScreen']!,
+    ScreenRoutes.PalettesScreen: routes['/palettesScreen']!,
+    ScreenRoutes.PaletteScreen: routes['/paletteScreen']!,
+    ScreenRoutes.ComparePalettesScreen: routes['/comparePalettesScreen']!,
+    ScreenRoutes.SwatchScreen: routes['/swatchScreen']!,
   };
 }

@@ -10,9 +10,9 @@ import 'PaletteScreen.dart';
 import 'ComparePalettesScreen.dart';
 
 class PalettesScreen extends StatefulWidget {
-  static PaletteStatus status;
+  static PaletteStatus? status;
 
-  PalettesScreen({ PaletteStatus status }) {
+  PalettesScreen({ PaletteStatus? status }) {
     if(status != null) {
       //sets screen info
       PalettesScreen.status = status;
@@ -25,9 +25,9 @@ class PalettesScreen extends StatefulWidget {
 }
 
 class PalettesScreenState extends State<PalettesScreen> with ScreenState {
-  Future _addPalettesFuture;
-  static List<Palette> _allPalettes = [];
-  static List<Palette> _palettes = [];
+  Future? _addPalettesFuture;
+  static List<Palette>? _allPalettes = [];
+  static List<Palette>? _palettes = [];
 
   bool _isSearching = false;
   String _search = '';
@@ -41,16 +41,16 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
     _addPalettesFuture = _addPalettes();
   }
 
-  Future<List<Palette>> _addPalettes() async {
-    if(_allPalettes == null || _allPalettes.length == 0 || _allPalettes[0].status != PalettesScreen.status) {
-      Map<String, Palette> map = (await IO.loadStatusFormatted(PalettesScreen.status));
-      _allPalettes = map.values.toList() ?? [];
-      _palettes = _allPalettes;
+  Future<List<Palette>?> _addPalettes() async {
+    if(_allPalettes == null || _allPalettes!.length == 0 || _allPalettes![0].status != PalettesScreen.status || IO.hasSaveChanged) {
+      Map<String, Palette> map = (await IO.loadStatusFormatted(PalettesScreen.status!));
+      _allPalettes = map.values.toList();
+      _palettes = _allPalettes!;
     }
     if(_search != '') {
-      _palettes = await IO.search(_allPalettes, _search);
+      _palettes = await IO.search(_allPalettes!, _search);
     } else {
-      _palettes = _allPalettes;
+      _palettes = _allPalettes!;
     }
     return _palettes;
   }
@@ -82,7 +82,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-            currentFocus.focusedChild.unfocus();
+            currentFocus.focusedChild!.unfocus();
           }
           setState(() {
             _isSearching = false;
@@ -155,7 +155,7 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                           onPressed: () {
                             FocusScopeNode currentFocus = FocusScope.of(context);
                             if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                              currentFocus.focusedChild.unfocus();
+                              currentFocus.focusedChild!.unfocus();
                             }
                             setState(() {
                               _isSearching = false;
@@ -175,22 +175,22 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                   List<Widget> children = [];
                   if(snapshot.connectionState != ConnectionState.active && snapshot.connectionState != ConnectionState.waiting) {
                     _palettes = _palettes ?? [];
-                    for(int i = 0; i < _palettes.length; i++) {
+                    for(int i = 0; i < _palettes!.length; i++) {
                       children.add(
                         globalWidgets.getListItem(
-                          '${_palettes[i].brand}',
-                          '${_palettes[i].name}',
-                          i == _palettes.length - 1,
+                          '${_palettes![i].brand}',
+                          '${_palettes![i].name}',
+                          i == _palettes!.length - 1,
                           () {
                             if(_isComparing) {
-                              if(_idsSelected.contains(_palettes[i].id)) {
+                              if(_idsSelected.contains(_palettes![i].id)) {
                                 setState(() {
-                                  _idsSelected.remove(_palettes[i].id);
+                                  _idsSelected.remove(_palettes![i].id);
                                 });
                               } else if(_idsSelected.length < 3) {
                                 //can compare up to 3
                                 setState(() {
-                                  _idsSelected.add(_palettes[i].id);
+                                  _idsSelected.add(_palettes![i].id);
                                 });
                               }
                             } else {
@@ -198,12 +198,12 @@ class PalettesScreenState extends State<PalettesScreen> with ScreenState {
                                 context,
                                 const Offset(1, 0),
                                 routes.ScreenRoutes.PaletteScreen,
-                                PaletteScreen(paletteId: _palettes[i].id, brand: _palettes[i].brand, name: _palettes[i].name),
+                                PaletteScreen(paletteId: _palettes![i].id, brand: _palettes![i].brand, name: _palettes![i].name),
                               );
                             }
                           },
                           hasCheckBox: _isComparing,
-                          isCheckBoxChecked: _idsSelected.contains(_palettes[i].id),
+                          isCheckBoxChecked: _idsSelected.contains(_palettes![i].id),
                         ),
                       );
                     }

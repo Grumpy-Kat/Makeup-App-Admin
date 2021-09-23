@@ -10,7 +10,7 @@ Future<void> openDialog(BuildContext context, Widget Function(BuildContext) buil
   );
 }
 
-Widget getAlertDialog(BuildContext context, { Widget title, Widget content, List<Widget> actions }) {
+Widget getAlertDialog(BuildContext context, { Widget? title, Widget? content, List<Widget>? actions }) {
   return AlertDialog(
     shape: const RoundedRectangleBorder(
       borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
@@ -55,36 +55,36 @@ Future<void> openTextDialog(BuildContext context, String title, String error, St
             context,
             title: Text(title, style: theme.primaryTextBold),
             content: getTextField(
-                context,
-                null,
-                value,
-                error,
-                showErrorText,
-                (String val) {
-                  value = val;
-                  if(required) {
-                    if(showErrorText && !(val == '' || val == null)) {
-                      setState(() { showErrorText = false; });
-                    }
-                  }
-                },
-                (String val) {
-                  value = val;
-                  if(required) {
-                    if(!(value == '' || value == null)) {
-                      setState(() { showErrorText = false; });
-                    }
-                    if(value == '' || value == null) {
-                      setState(() { showErrorText = true; });
-                    }
+              context,
+              null,
+              value,
+              error,
+              showErrorText,
+              (String val) {
+                value = val;
+                if(required) {
+                  if(showErrorText && val != '') {
+                    setState(() { showErrorText = false; });
                   }
                 }
+              },
+              (String val) {
+                value = val;
+                if(required) {
+                  if(showErrorText && value != '') {
+                    setState(() { showErrorText = false; });
+                  }
+                  if(value == '') {
+                    setState(() { showErrorText = true; });
+                  }
+                }
+              }
             ),
             actions: <Widget>[
               getFlatButton(
                 bgColor: theme.accentColor,
                 onPressed: () {
-                  if(required && (value == '' || value == null)) {
+                  if(required && value == '') {
                     setState(() { showErrorText = true; });
                   } else {
                     //doesn't use navigation because is popping a Dialog
@@ -163,7 +163,7 @@ PageRouteBuilder slideTransition(BuildContext context, Widget nextScreen, int du
   );
 }
 
-Widget getTextField(BuildContext context, String label, String value, String error, bool showErrorText, OnStringAction onChanged, OnStringAction onSubmitted, { Key key }) {
+Widget getTextField(BuildContext context, String? label, String value, String error, bool showErrorText, OnStringAction onChanged, OnStringAction onSubmitted, { Key? key }) {
   return TextFormField(
     key: key,
     textAlign: TextAlign.left,
@@ -207,7 +207,7 @@ Widget getTextField(BuildContext context, String label, String value, String err
   );
 }
 
-Widget getNumField(BuildContext context, String label, double value, String error, bool showErrorText, OnDoubleAction onChanged, OnDoubleAction onSubmitted, { Key key }) {
+Widget getNumField(BuildContext context, String label, double value, String error, bool showErrorText, OnDoubleAction onChanged, OnDoubleAction onSubmitted, { Key? key }) {
   return TextFormField(
     key: key,
     textAlign: TextAlign.left,
@@ -271,7 +271,7 @@ Widget getBackButton(OnVoidAction onPressed) {
   );
 }
 
-Widget getListItem(String text1, String text2, bool isLast, OnVoidAction onTap, { bool hasCheckBox = false, bool isCheckBoxChecked = false }) {
+Widget getListItem(String text1, String? text2, bool isLast, OnVoidAction onTap, { bool hasCheckBox = false, bool isCheckBoxChecked = false }) {
   Decoration decorationLast = BoxDecoration(
     color: theme.primaryColor,
     border: Border(
@@ -324,7 +324,7 @@ Widget getListItem(String text1, String text2, bool isLast, OnVoidAction onTap, 
           alignment: Alignment.centerLeft,
           child: Checkbox(
             value: isCheckBoxChecked,
-            onChanged: (bool val) {
+            onChanged: (bool? val) {
               onTap();
             },
             checkColor: theme.accentColor,
@@ -346,7 +346,7 @@ Widget getListItem(String text1, String text2, bool isLast, OnVoidAction onTap, 
   );
 }
 
-Widget getFlatButton({ OnVoidAction onPressed, Widget child, EdgeInsets padding, Color bgColor, Color splashColor }) {
+Widget getFlatButton({ OnVoidAction? onPressed, required Widget child, EdgeInsets? padding, Color? bgColor, Color? splashColor }) {
   return TextButton(
     onPressed: onPressed,
     style: TextButton.styleFrom(
@@ -356,8 +356,8 @@ Widget getFlatButton({ OnVoidAction onPressed, Widget child, EdgeInsets padding,
         borderRadius: const BorderRadius.all(const Radius.circular(2)),
       ),
     ).copyWith(
-      overlayColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+        (Set<MaterialState> states) {
           if(states.contains(MaterialState.pressed)) {
             return splashColor ?? theme.accentColor.withAlpha(130);
           }
@@ -369,7 +369,7 @@ Widget getFlatButton({ OnVoidAction onPressed, Widget child, EdgeInsets padding,
   );
 }
 
-Widget getOutlineButton({ OnVoidAction onPressed, Widget child, EdgeInsets padding, Color bgColor, Color outlineColor, double outlineWidth, Color splashColor }) {
+Widget getOutlineButton({ OnVoidAction? onPressed, required Widget child, EdgeInsets? padding, Color? bgColor, Color? outlineColor, double? outlineWidth, Color? splashColor }) {
   return OutlinedButton(
     onPressed: onPressed,
     style: OutlinedButton.styleFrom(
@@ -379,7 +379,7 @@ Widget getOutlineButton({ OnVoidAction onPressed, Widget child, EdgeInsets paddi
         borderRadius: const BorderRadius.all(const Radius.circular(2)),
       ),
     ).copyWith(
-      side: MaterialStateProperty.resolveWith<BorderSide>(
+      side: MaterialStateProperty.resolveWith<BorderSide?>(
         (Set<MaterialState> states) {
           if(states.contains(MaterialState.pressed)) {
             return BorderSide(
@@ -390,8 +390,8 @@ Widget getOutlineButton({ OnVoidAction onPressed, Widget child, EdgeInsets paddi
           return null;
         },
       ),
-      overlayColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+        (Set<MaterialState> states) {
           if(states.contains(MaterialState.pressed)) {
             return splashColor ?? theme.accentColor.withAlpha(130);
           }

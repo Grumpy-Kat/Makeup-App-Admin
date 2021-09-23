@@ -1,10 +1,9 @@
 import 'ColorObjects.dart';
 
-Map<String, RGBColor> colorNames;
+Map<String, RGBColor> colorNames = Map<String, RGBColor>();
 
 Map<String, RGBColor> createColorNames() {
-  if(colorNames == null) {
-    colorNames = Map<String, RGBColor>();
+  if(colorNames.isEmpty) {
     colorNames['color_pastelRed'] = RGBColor(1, 0.95, 0.95);
     colorNames['color_nude'] = RGBColor(0.920, 0.804, 0.745);
     colorNames['color_lightRed'] = RGBColor(1, 0.8, 0.8);

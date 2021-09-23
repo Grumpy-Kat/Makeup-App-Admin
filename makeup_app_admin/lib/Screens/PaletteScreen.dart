@@ -12,13 +12,13 @@ import '../localizationIO.dart';
 import 'Screen.dart';
 
 class PaletteScreen extends StatefulWidget {
-  static String paletteId;
-  static String brand;
-  static String name;
+  static String? paletteId;
+  static String? brand;
+  static String? name;
   static bool isReloading = true;
   static bool hasDeletedSwatch = false;
 
-  PaletteScreen({ String paletteId, String brand = '', String name = '' }) {
+  PaletteScreen({ String? paletteId, String brand = '', String name = '' }) {
     isReloading = true;
     if(paletteId != null && paletteId != '') {
       //sets screen info
@@ -34,13 +34,13 @@ class PaletteScreen extends StatefulWidget {
 }
 
 class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchListState, ReorderableSwatchListState {
-  Palette _palette;
+  Palette? _palette;
 
   List<Swatch> _swatches = [];
   List<SwatchIcon> _swatchIcons = [];
-  Future<List<Swatch>> _swatchesFuture;
+  Future<List<Swatch>>? _swatchesFuture;
 
-  SwatchList _swatchList;
+  late SwatchList _swatchList;
 
   bool _isEditing = false;
 
@@ -58,8 +58,8 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
       PaletteScreen.hasDeletedSwatch = false;
       setState(() {});
     }
-    _palette = IO.getPalette(PaletteScreen.paletteId);
-    _swatches = _palette.swatches;
+    _palette = IO.getPalette(PaletteScreen.paletteId!);
+    _swatches = _palette!.swatches;
     _addSwatchIcons();
     return _swatches;
   }
@@ -95,7 +95,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
     List<Widget> statusBtns = getStatusBtns();
     return buildComplete(
       context,
-      (_palette == null) ? '${PaletteScreen.brand} ${PaletteScreen.name}' : '${_palette.brand} ${_palette.name}',
+      (_palette == null) ? '${PaletteScreen.brand} ${PaletteScreen.name}' : '${_palette!.brand} ${_palette!.name}',
       3,
       leftBar: globalWidgets.getBackButton(() => navigation.pop(context, true)),
       rightBar: [
@@ -125,16 +125,16 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                 globalWidgets.getTextField(
                   context,
                   getString('addPalette_brand'),
-                  (_palette == null) ? '' : _palette.brand,
+                  (_palette == null) ? '' : _palette!.brand,
                   getString('addPalette_brandError'),
                   false,
                   (String val) {
-                    _palette.brand = val;
+                    _palette!.brand = val;
                   },
                   (String val) {
-                    _palette.brand = val;
+                    _palette!.brand = val;
                   },
-                  key: Key((_palette == null) ? '' : _palette.brand),
+                  key: Key((_palette == null) ? '' : _palette!.brand),
                 ),
                 const SizedBox(
                   height: 20,
@@ -142,16 +142,16 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                 globalWidgets.getTextField(
                   context,
                   getString('addPalette_palette'),
-                  (_palette == null) ? '' : _palette.name,
+                  (_palette == null) ? '' : _palette!.name,
                   getString('addPalette_paletteError'),
                   false,
                   (String val) {
-                    _palette.name = val;
+                    _palette!.name = val;
                   },
                   (String val) {
-                    _palette.name = val;
+                    _palette!.name = val;
                   },
-                  key: Key((_palette == null) ? '' : _palette.name),
+                  key: Key((_palette == null) ? '' : _palette!.name),
                 ),
                 const SizedBox(
                   height: 20,
@@ -159,18 +159,18 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                 globalWidgets.getNumField(
                   context,
                   getString('addPalette_weight'),
-                  (_palette == null) ? 0.0 : _palette.weight,
+                  (_palette == null) ? 0.0 : _palette!.weight,
                   '',
                   false,
                   (double val) {
-                    _palette.weight = double.parse(val.toStringAsFixed(4));
+                    _palette!.weight = double.parse(val.toStringAsFixed(4));
                   },
                   (double val) {
                     setState(() {
-                      _palette.weight = double.parse(val.toStringAsFixed(4));
+                      _palette!.weight = double.parse(val.toStringAsFixed(4));
                     });
                   },
-                  key: Key((_palette == null) ? '' : _palette.weight.toString()),
+                  key: Key((_palette == null) ? '' : _palette!.weight.toString()),
                 ),
                 const SizedBox(
                   height: 20,
@@ -178,18 +178,18 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                 globalWidgets.getNumField(
                   context,
                   getString('addPalette_price'),
-                  (_palette == null) ? 0.0 : _palette.price,
+                  (_palette == null) ? 0.0 : _palette!.price,
                   '',
                   false,
                   (double val) {
-                    _palette.price = double.parse(val.toStringAsFixed(2));
+                    _palette!.price = double.parse(val.toStringAsFixed(2));
                   },
                   (double val) {
                     setState(() {
-                      _palette.price = double.parse(val.toStringAsFixed(2));
+                      _palette!.price = double.parse(val.toStringAsFixed(2));
                     });
                   },
-                  key: Key((_palette == null) ? '' : _palette.price.toString()),
+                  key: Key((_palette == null) ? '' : _palette!.price.toString()),
                 ),
                 const SizedBox(
                   height: 20,
@@ -199,8 +199,8 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   child: globalWidgets.getFlatButton(
                     bgColor: theme.accentColor,
                     onPressed: () async {
-                      _palette.swatches = _swatches;
-                      await IO.save(_palette);
+                      _palette!.swatches = _swatches;
+                      await IO.save(_palette!);
                       await IO.loadAllFormatted();
                       await _addSwatches();
                       setState(() { });
@@ -268,18 +268,18 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
             _swatches.add(
               Swatch(
                 id: _swatches.length,
-                paletteId: _palette.id,
+                paletteId: _palette!.id,
                 color: RGBColor(0.5, 0.5, 0.5),
                 finish: 'finish_matte',
-                brand: _palette.brand,
-                palette: _palette.name,
+                brand: _palette!.brand,
+                palette: _palette!.name,
                 weight: 0,
                 price: 0,
                 shade: '',
               ),
             );
-            _palette.swatches = _swatches;
-            IO.save(_palette).then(
+            _palette!.swatches = _swatches;
+            IO.save(_palette!).then(
               (value) {
                 IO.loadAllFormatted().then(
                   (value) {
@@ -298,11 +298,11 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
   }
 
   List<Widget> getStatusBtns() {
-    Widget btn1;
-    Widget btn2;
+    Widget? btn1;
+    Widget? btn2;
 
     if(_palette != null) {
-      switch(_palette.status) {
+      switch(_palette!.status) {
         case PaletteStatus.Approved: {
           //if approved, pend or delete
           btn1 = Container(
@@ -314,7 +314,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to make this palette pending?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Pending);
+                    await IO.changeStatus(_palette!, PaletteStatus.Pending);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -335,7 +335,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to delete this palette?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Deleted);
+                    await IO.changeStatus(_palette!, PaletteStatus.Deleted);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -360,7 +360,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to approve this palette?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Approved);
+                    await IO.changeStatus(_palette!, PaletteStatus.Approved);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -381,7 +381,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to reject this palette?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Rejected);
+                    await IO.changeStatus(_palette!, PaletteStatus.Rejected);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -406,7 +406,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to approve this palette?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Approved);
+                    await IO.changeStatus(_palette!, PaletteStatus.Approved);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -427,7 +427,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to make this palette pending?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Pending);
+                    await IO.changeStatus(_palette!, PaletteStatus.Pending);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -452,7 +452,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to approve this palette?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Approved);
+                    await IO.changeStatus(_palette!, PaletteStatus.Approved);
                     navigation.pop(context, true);
                   },
                       () { },
@@ -473,7 +473,7 @@ class PaletteScreenState extends State<PaletteScreen> with ScreenState, SwatchLi
                   context,
                   'Are you sure you want to make this palette pending?',
                       () async {
-                    await IO.changeStatus(_palette, PaletteStatus.Pending);
+                    await IO.changeStatus(_palette!, PaletteStatus.Pending);
                     navigation.pop(context, true);
                   },
                       () { },

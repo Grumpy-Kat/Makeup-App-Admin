@@ -36,7 +36,7 @@ class GlamKitAppState extends State<GlamKitApp> {
     await Firebase.initializeApp();
     await login();
     await localizationIO.load();
-    theme.isDarkTheme = (WidgetsBinding.instance.window.platformBrightness == Brightness.dark);
+    theme.isDarkTheme = (WidgetsBinding.instance!.window.platformBrightness == Brightness.dark);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     routes.setRoutes();
     presetPalettesIO.init();
@@ -49,15 +49,15 @@ class GlamKitAppState extends State<GlamKitApp> {
     if(FirebaseAuth.instance.currentUser == null) {
       await FirebaseAuth.instance.signInAnonymously();
     }
-    await FirebaseAuth.instance.currentUser.updateProfile(displayName: login);
-    await FirebaseAuth.instance.currentUser.getIdToken(true);
-    print(FirebaseAuth.instance.currentUser.displayName);
+    await FirebaseAuth.instance.currentUser!.updateDisplayName(login);
+    await FirebaseAuth.instance.currentUser!.getIdToken(true);
+    print(FirebaseAuth.instance.currentUser!.displayName);
   }
 
   Widget _getHome() {
     if(hasLoaded) {
       navigation.init(routes.ScreenRoutes.CategoriesScreen);
-      return routes.routes[routes.defaultRoute](null);
+      return routes.routes[routes.defaultRoute]!(null);
     }
     return Container();
   }
